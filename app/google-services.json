@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "502095189212",
+    "firebase_url": "https://simbirsoftproject.firebaseio.com",
+    "project_id": "simbirsoftproject",
+    "storage_bucket": "simbirsoftproject.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:502095189212:android:00605437c8f003d75a9019",
+        "android_client_info": {
+          "package_name": "com.example.simbirsoftproject"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "502095189212-c8h421vlkhsa8entcup4i7sp738rt4nn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBN7i5hD3AXUH0gbOFMv_pt4ONBczMO3cY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "502095189212-c8h421vlkhsa8entcup4i7sp738rt4nn.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

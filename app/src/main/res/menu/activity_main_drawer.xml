@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/fragmentMain"
+            android:icon="@drawable/main"
+            android:title="@string/menu_main" />
+        <item
+            android:id="@+id/fragmentShares"
+            android:icon="@drawable/shares"
+            android:title="@string/menu_shares" />
+        <item
+            android:id="@+id/fragmentTimetable"
+            android:icon="@drawable/timetable"
+            android:title="@string/menu_timetable" />
+        <item
+            android:id="@+id/fragmentTreners"
+            android:icon="@drawable/trainers"
+            android:title="@string/menu_trainers" />
+        <item
+            android:id="@+id/fragmentGroupLessons"
+            android:icon="@drawable/grouplessons"
+            android:title="@string/menu_groupLessons" />
+        <item
+            android:id="@+id/fragmentSimulators"
+            android:icon="@drawable/simulators"
+            android:title="@string/menu_simulators" />
+        <item
+            android:id="@+id/fragmentChat"
+            android:icon="@drawable/chat"
+            android:title="@string/menu_chat" />
+        <item
+            android:id="@+id/fragmentAchievements"
+            android:icon="@drawable/achievements"
+            android:title="@string/menu_achievements" />
+        <item
+            android:id="@+id/fragmentTheory"
+            android:icon="@drawable/theory"
+            android:title="@string/menu_theory" />
+    </group>
+</menu>
