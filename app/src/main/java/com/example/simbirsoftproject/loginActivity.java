@@ -64,11 +64,11 @@ public class loginActivity extends AppCompatActivity implements View.OnClickList
 
     @Override
     public void onClick(View view) {
-        final String email = etLogin.getText().toString(), password = etPassword.getText().toString();
-        if(!email.isEmpty() && !password.isEmpty()){
+        String nickName = etLogin.getText().toString(), password = etPassword.getText().toString();
+        if(!nickName.isEmpty() && !password.isEmpty()){
             switch (view.getId()) {
                 case R.id.btnLogin:
-                    mAuth.signInWithEmailAndPassword(email, password)
+                    mAuth.signInWithEmailAndPassword(nickName, password)
                             .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                                 @Override
                                 public void onComplete(@NonNull Task<AuthResult> task) {
@@ -77,7 +77,7 @@ public class loginActivity extends AppCompatActivity implements View.OnClickList
                                         updateUI(user);
                                         SharedPreferences.Editor editor = mySharedPreferences.edit();
                                         editor.putBoolean(APP_PREFERENCES_SETTINGS_OF_ENTRY, false);
-                                        editor.putString(APP_PREFERENCES_NAME, email);
+                                        editor.putString(APP_PREFERENCES_NAME, etLogin.getText().toString());
                                         editor.apply();
                                         Intent intent = new Intent(loginActivity.this, MainActivity.class);
                                         startActivity(intent);
@@ -89,7 +89,7 @@ public class loginActivity extends AppCompatActivity implements View.OnClickList
                             });
                     break;
                 case R.id.btnRegister:
-                    mAuth.createUserWithEmailAndPassword(email, password)
+                    mAuth.createUserWithEmailAndPassword(nickName, password)
                             .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                                 @Override
                                 public void onComplete(@NonNull Task<AuthResult> task) {
