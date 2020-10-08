@@ -18,12 +18,14 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class loginActivity extends AppCompatActivity implements View.OnClickListener {
 
     public static final String APP_PREFERENCES = "mySharedPreferences";
     public static final String APP_PREFERENCES_NAME = "username";
     public static final String APP_PREFERENCES_SETTINGS_OF_ENTRY = "entry";
-    public static final String APP_PREFERENCES_PASSWORD = "password";
 
     SharedPreferences mySharedPreferences;
 
@@ -64,7 +66,7 @@ public class loginActivity extends AppCompatActivity implements View.OnClickList
 
     @Override
     public void onClick(View view) {
-        String nickName = etLogin.getText().toString(), password = etPassword.getText().toString();
+        final String nickName = etLogin.getText().toString(), password = etPassword.getText().toString();
         if(!nickName.isEmpty() && !password.isEmpty()){
             switch (view.getId()) {
                 case R.id.btnLogin:
@@ -100,7 +102,7 @@ public class loginActivity extends AppCompatActivity implements View.OnClickList
                                         Toast.makeText(loginActivity.this, "Регистрация прошла успешно! Попробуйте войти!", Toast.LENGTH_LONG).show();
                                     } else {
                                         updateUI(null);
-                                        Toast.makeText(loginActivity.this, "Аккаунт с такой почтой уже существует!", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(loginActivity.this, "Для регистрации используется email адрес, который не был ещё зарегистрирован", Toast.LENGTH_SHORT).show();
                                     }
                                 }
                             });
