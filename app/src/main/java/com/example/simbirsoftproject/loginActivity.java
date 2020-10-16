@@ -85,7 +85,8 @@ public class loginActivity extends AppCompatActivity implements View.OnClickList
                                         startActivity(intent);
                                     } else {
                                         updateUI(null);
-                                        Toast.makeText(loginActivity.this, "Вы ввели неправильный Email И/ИЛИ пароль!", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(loginActivity.this, "Вы ввели неправильный Email И/ИЛИ пароль!",
+                                                Toast.LENGTH_SHORT).show();
                                     }
                                 }
                             });
@@ -99,10 +100,12 @@ public class loginActivity extends AppCompatActivity implements View.OnClickList
                                         // Sign in success, update UI with the signed-in user's information
                                         FirebaseUser user = mAuth.getCurrentUser();
                                         updateUI(user);
-                                        Toast.makeText(loginActivity.this, "Регистрация прошла успешно! Попробуйте войти!", Toast.LENGTH_LONG).show();
+                                        Toast.makeText(loginActivity.this, "Регистрация прошла успешно! Попробуйте войти!",
+                                                Toast.LENGTH_LONG).show();
                                     } else {
                                         updateUI(null);
-                                        Toast.makeText(loginActivity.this, "Для регистрации используется email адрес, который не был ещё зарегистрирован", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(loginActivity.this, "Для регистрации используется email адрес, " +
+                                                "который не был ещё зарегистрирован", Toast.LENGTH_SHORT).show();
                                     }
                                 }
                             });
