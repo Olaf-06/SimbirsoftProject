@@ -24,6 +24,7 @@
             android:hint="@string/hintEnterTheMessage"/>
         <Button
             android:id="@+id/send_message_b"
+            android:text="Отправить"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
     </LinearLayout>

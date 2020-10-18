@@ -3,21 +3,32 @@ package com.example.simbirsoftproject;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.SetOptions;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -26,6 +37,7 @@ public class loginActivity extends AppCompatActivity implements View.OnClickList
     public static final String APP_PREFERENCES = "mySharedPreferences";
     public static final String APP_PREFERENCES_NAME = "username";
     public static final String APP_PREFERENCES_SETTINGS_OF_ENTRY = "entry";
+    public static final String APP_PREFERENCES_SETTINGS_OF_REGISTRATION = "reg";
 
     SharedPreferences mySharedPreferences;
 
@@ -47,6 +59,7 @@ public class loginActivity extends AppCompatActivity implements View.OnClickList
         btnRegister.setOnClickListener(this);
         btnLogin.setOnClickListener(this);
         mySharedPreferences = getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
+
     }
 
     @Override
@@ -100,8 +113,16 @@ public class loginActivity extends AppCompatActivity implements View.OnClickList
                                         // Sign in success, update UI with the signed-in user's information
                                         FirebaseUser user = mAuth.getCurrentUser();
                                         updateUI(user);
-                                        Toast.makeText(loginActivity.this, "Регистрация прошла успешно! Попробуйте войти!",
+                                        SharedPreferences.Editor editor = mySharedPreferences.edit();
+                                        editor.putBoolean(APP_PREFERENCES_SETTINGS_OF_ENTRY, false);
+                                        editor.putString(APP_PREFERENCES_NAME, etLogin.getText().toString());
+                                        editor.putBoolean(APP_PREFERENCES_SETTINGS_OF_REGISTRATION, true);
+                                        editor.apply();
+                                        Log.d("logmy", "Готовимся перейти на нашу страницу");
+                                        Toast.makeText(loginActivity.this, "Регистрация прошла успешно!",
                                                 Toast.LENGTH_LONG).show();
+                                        Intent intent = new Intent(loginActivity.this, MainActivity.class);
+                                        startActivity(intent);
                                     } else {
                                         updateUI(null);
                                         Toast.makeText(loginActivity.this, "Для регистрации используется email адрес, " +
