@@ -3,6 +3,8 @@ package com.example.simbirsoftproject;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -12,16 +14,18 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FileDownloadTask;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.squareup.picasso.Picasso;
 
 import androidx.annotation.NonNull;
 import androidx.navigation.NavController;
@@ -32,6 +36,8 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -86,7 +92,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
         View header = navigationView.getHeaderView(0);
-        TextView tvHeaderEmail = (TextView) header.findViewById(R.id.tvHeaderEmail);
+        final TextView tvHeaderEmail = (TextView) header.findViewById(R.id.tvHeaderEmail);
         tvHeaderEmail.setText(nickName);
         Button btnHeaderExit = (Button) header.findViewById(R.id.btnHeaderExit);
         btnHeaderExit.setOnClickListener(this);
@@ -117,25 +123,35 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             editor.putBoolean(APP_PREFERENCES_SETTINGS_OF_REGISTRATION, false);
             editor.apply();
         }
+        imgInMainMenu = (ImageView) header.findViewById(R.id.imgInMainMenu);
+        imgInMainMenu.setOnClickListener(this);
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference storageRef = storage.getReferenceFromUrl("gs://simbirsoftproject.appspot.com/photoOfUsers").child(user.getUid());
+        try {
+            final File localFile = File.createTempFile("images", "jpg");
+            storageRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                    Bitmap bitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
+                    imgInMainMenu.setImageBitmap(bitmap);
 
-        DocumentReference docRef = db.collection("cities").document("SF");
-        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception exception) {
+                }
+            });
+        } catch (IOException e ) {}
+        DocumentReference docRef = db.collection("users").document(user.getUid());
+        docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document.exists()) {
-                        Log.d("logmy", "DocumentSnapshot data: " + document.getData());
-                    } else {
-                        Log.d("logmy", "No such document");
-                    }
-                } else {
-                    Log.d("logmy", "get failed with ", task.getException());
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                Users users = documentSnapshot.toObject(Users.class);
+                if(!users.getFirstName().isEmpty() && !users.getLastName().isEmpty()){
+                    tvHeaderEmail.setText(users.getFirstName() + " " + users.getLastName());
                 }
             }
         });
-        imgInMainMenu = (ImageView) header.findViewById(R.id.imgInMainMenu);
-        imgInMainMenu.setOnClickListener(this);
     }
 
     @Override

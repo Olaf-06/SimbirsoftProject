@@ -4,10 +4,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,7 +13,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.Switch;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -25,6 +22,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
@@ -33,17 +31,20 @@ import java.util.Map;
 
 public class editProfileData extends AppCompatActivity implements View.OnClickListener {
 
-    ImageView imgProfile;
+    private Uri imgSrc;
+    boolean boolCheck = false;
+    ImageView imgProfile, imgInMainMenu;
     Button btnEdit;
     EditText etFirstName, etLastName;
-    FirebaseFirestore db = FirebaseFirestore.getInstance();
     private StorageReference mStorageRef;
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_profile_data);
         imgProfile = (ImageView) findViewById(R.id.imgProfile);
+
         btnEdit = (Button) findViewById(R.id.btnEdit);
         etFirstName = (EditText) findViewById(R.id.etFirstName);
         etLastName = (EditText) findViewById(R.id.etLastName);
@@ -60,18 +61,38 @@ public class editProfileData extends AppCompatActivity implements View.OnClickLi
         switch (view.getId()) {
             case R.id.btnEdit:
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                String uid = user.getUid();
+                if (boolCheck) {
+                    StorageReference riversRef = mStorageRef.child("photoOfUsers/" + uid);
+                    riversRef.putFile(imgSrc)
+                            .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                @Override
+                                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                    boolCheck = false;
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception exception) {
+                                    // Handle unsuccessful uploads
+                                    // ...
+                                    boolCheck = false;
+                                }
+                            });
+                }
+                Log.d("logmy", "Загрузили фото");
                 if (user != null && !firstName.isEmpty() && !lastName.isEmpty()) {
-                    String uid = user.getUid();
                     Map<String, Object> userdb = new HashMap<>();
                     userdb.put("firstName", firstName);
                     userdb.put("lastName", lastName);
                     userdb.put("urlPhoto", "");
-                    Log.d("logmy", "Аутентификация прошла и сейчас будем добавлять документ в коллекцию");
+                    Log.d("logmy", "Cейчас будем добавлять документ в коллекцию");
                     db.collection("users").document(uid)
                             .set(userdb)
                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void aVoid) {
+                                    Intent intent = new Intent(editProfileData.this, MainActivity.class);
+                                    startActivity(intent);
                                 }
                             })
                             .addOnFailureListener(new OnFailureListener() {
@@ -107,6 +128,7 @@ public class editProfileData extends AppCompatActivity implements View.OnClickLi
                         //Получаем URI изображения, преобразуем его в Bitmap
                         //объект и отображаем в элементе ImageView нашего интерфейса:
                         final Uri imageUri = imageReturnedIntent.getData();
+                        boolCheck = true;
                         final InputStream imageStream = getContentResolver().openInputStream(imageUri);
                         final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
                         imgProfile.setImageBitmap(selectedImage);
