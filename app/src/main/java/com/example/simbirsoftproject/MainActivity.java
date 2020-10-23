@@ -99,62 +99,69 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Button btnHeaderExit = (Button) header.findViewById(R.id.btnHeaderExit);
         btnHeaderExit.setOnClickListener(this);
 
-        user = FirebaseAuth.getInstance().getCurrentUser();
-        if (user != null && registration) {
-            String uid = user.getUid();
-
-            Map<String, Object> userdb = new HashMap<>();
-            userdb.put("firstName", "");
-            userdb.put("lastName", "");
-            userdb.put("urlPhoto", "");
-            Log.d("logmy", "Аутентификация прошла и сейчас будем добавлять документ в коллекцию");
-            db.collection("users").document(uid)
-                    .set(userdb)
-                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void aVoid) {
-                        }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(MainActivity.this, "Error adding document", Toast.LENGTH_SHORT).show();
-                        }
-                    });
-            SharedPreferences.Editor editor = mySharedPreferences.edit();
-            editor.putBoolean(APP_PREFERENCES_SETTINGS_OF_REGISTRATION, false);
-            editor.apply();
-        }
-        imgInMainMenu = (ImageView) header.findViewById(R.id.imgInMainMenu);
-        imgInMainMenu.setOnClickListener(this);
-        FirebaseStorage storage = FirebaseStorage.getInstance();
-        StorageReference storageRef = storage.getReferenceFromUrl("gs://simbirsoftproject.appspot.com/photoOfUsers").child(user.getUid());
         try {
-            final File localFile = File.createTempFile("images", "jpg");
-            storageRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+            user = FirebaseAuth.getInstance().getCurrentUser();
+            if (user != null && registration) {
+                String uid = user.getUid();
+
+                Map<String, Object> userdb = new HashMap<>();
+                userdb.put("adminRights", "0");
+                userdb.put("firstName", "");
+                userdb.put("lastName", "");
+                userdb.put("urlPhoto", "");
+                Log.d("logmy", "Аутентификация прошла и сейчас будем добавлять документ в коллекцию");
+                db.collection("users").document(uid)
+                        .set(userdb)
+                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Toast.makeText(MainActivity.this, "Error adding document", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                SharedPreferences.Editor editor = mySharedPreferences.edit();
+                editor.putBoolean(APP_PREFERENCES_SETTINGS_OF_REGISTRATION, false);
+                editor.apply();
+            }
+            imgInMainMenu = (ImageView) header.findViewById(R.id.imgInMainMenu);
+            imgInMainMenu.setOnClickListener(this);
+            FirebaseStorage storage = FirebaseStorage.getInstance();
+            StorageReference storageRef = storage.getReferenceFromUrl("gs://simbirsoftproject.appspot.com/photoOfUsers").child(user.getUid());
+            try {
+                final File localFile = File.createTempFile("images", "jpg");
+                storageRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                        Bitmap bitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
+                        imgInMainMenu.setImageBitmap(bitmap);
+                        onStart();
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+                    }
+                });
+            } catch (IOException e ) {}
+            DocumentReference docRef = db.collection("users").document(user.getUid());
+            docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                 @Override
-                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                    Bitmap bitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
-                    imgInMainMenu.setImageBitmap(bitmap);
-                    onStart();
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception exception) {
+                public void onSuccess(DocumentSnapshot documentSnapshot) {
+                    Users users = documentSnapshot.toObject(Users.class);
+                    if(!users.getFirstName().isEmpty() && !users.getLastName().isEmpty()){
+                        tvHeaderEmail.setText(users.getFirstName() + " " + users.getLastName());
+                    }
                 }
             });
-        } catch (IOException e ) {}
-        DocumentReference docRef = db.collection("users").document(user.getUid());
-        docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-            @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                Users users = documentSnapshot.toObject(Users.class);
-                if(!users.getFirstName().isEmpty() && !users.getLastName().isEmpty()){
-                    tvHeaderEmail.setText(users.getFirstName() + " " + users.getLastName());
-                }
-            }
-        });
-        Log.d("logmy", "onCreate");
+            Log.d("logmy", "onCreate");
+        } catch (Exception e) {
+            e.printStackTrace();
+            Intent intent = new Intent(MainActivity.this, loginActivity.class);
+            startActivity(intent);
+        }
     }
 
     @Override
