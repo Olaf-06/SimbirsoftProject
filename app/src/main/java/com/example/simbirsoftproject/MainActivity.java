@@ -54,6 +54,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Boolean entryBool, registration;
     private String nickName;
     ImageView imgInMainMenu;
+    FirebaseUser user;
+    TextView tvHeaderEmail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,12 +94,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
         View header = navigationView.getHeaderView(0);
-        final TextView tvHeaderEmail = (TextView) header.findViewById(R.id.tvHeaderEmail);
+        tvHeaderEmail = (TextView) header.findViewById(R.id.tvHeaderEmail);
         tvHeaderEmail.setText(nickName);
         Button btnHeaderExit = (Button) header.findViewById(R.id.btnHeaderExit);
         btnHeaderExit.setOnClickListener(this);
 
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null && registration) {
             String uid = user.getUid();
 
@@ -134,7 +136,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
                     Bitmap bitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
                     imgInMainMenu.setImageBitmap(bitmap);
-
+                    onStart();
                 }
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
@@ -152,6 +154,43 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
             }
         });
+        Log.d("logmy", "onCreate");
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.d("logmy", "onStart");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d("logmy", "onResume");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.d("logmy", "onPause");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.d("logmy", "onStop");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.d("logmy", "onDestroy");
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        Log.d("logmy", "onRestart");
     }
 
     @Override

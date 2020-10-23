@@ -32,12 +32,13 @@ import java.util.Map;
 public class editProfileData extends AppCompatActivity implements View.OnClickListener {
 
     private Uri imgSrc;
-    boolean boolCheck = false;
-    ImageView imgProfile, imgInMainMenu;
+    ImageView imgProfile;
     Button btnEdit;
     EditText etFirstName, etLastName;
     private StorageReference mStorageRef;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
+    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+    String uid = user.getUid();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,25 +61,6 @@ public class editProfileData extends AppCompatActivity implements View.OnClickLi
         String firstName = etFirstName.getText().toString(), lastName = etLastName.getText().toString();
         switch (view.getId()) {
             case R.id.btnEdit:
-                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                String uid = user.getUid();
-                if (boolCheck) {
-                    StorageReference riversRef = mStorageRef.child("photoOfUsers/" + uid);
-                    riversRef.putFile(imgSrc)
-                            .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                                @Override
-                                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                                    boolCheck = false;
-                                }
-                            }).addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception exception) {
-                                    // Handle unsuccessful uploads
-                                    // ...
-                                    boolCheck = false;
-                                }
-                            });
-                }
                 Log.d("logmy", "Загрузили фото");
                 if (user != null && !firstName.isEmpty() && !lastName.isEmpty()) {
                     Map<String, Object> userdb = new HashMap<>();
@@ -128,10 +110,23 @@ public class editProfileData extends AppCompatActivity implements View.OnClickLi
                         //Получаем URI изображения, преобразуем его в Bitmap
                         //объект и отображаем в элементе ImageView нашего интерфейса:
                         final Uri imageUri = imageReturnedIntent.getData();
-                        boolCheck = true;
+                        imgSrc = imageUri;
                         final InputStream imageStream = getContentResolver().openInputStream(imageUri);
                         final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
                         imgProfile.setImageBitmap(selectedImage);
+                        StorageReference riversRef = mStorageRef.child("photoOfUsers/" + uid);
+                        riversRef.putFile(imgSrc)
+                                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                    @Override
+                                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                    }
+                                }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception exception) {
+                                // Handle unsuccessful uploads
+                                // ...
+                            }
+                        });
                     } catch (FileNotFoundException e) {
                         e.printStackTrace();
                     }
