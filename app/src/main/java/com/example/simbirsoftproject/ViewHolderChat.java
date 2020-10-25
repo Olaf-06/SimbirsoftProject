@@ -6,11 +6,11 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class ViewHolder extends RecyclerView.ViewHolder {
+public class ViewHolderChat extends RecyclerView.ViewHolder {
 
     TextView message;
 
-    public ViewHolder(@NonNull View itemView) {
+    public ViewHolderChat(@NonNull View itemView) {
         super(itemView);
         message = (TextView) itemView.findViewById(R.id.message_item);
     }

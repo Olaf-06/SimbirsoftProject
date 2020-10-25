@@ -69,7 +69,7 @@ public class editProfileData extends AppCompatActivity implements View.OnClickLi
                     userdb.put("urlPhoto", "");
                     Log.d("logmy", "Cейчас будем добавлять документ в коллекцию");
                     db.collection("users").document(uid)
-                            .set(userdb)
+                            .update(userdb)
                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void aVoid) {

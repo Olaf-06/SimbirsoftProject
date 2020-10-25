@@ -10,26 +10,26 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
-public class DataAdapter extends RecyclerView.Adapter<ViewHolder> {
+public class DataAdapterChat extends RecyclerView.Adapter<ViewHolderChat> {
 
     ArrayList<String> messages;
 
     LayoutInflater inflater;
 
-    public DataAdapter(Context context, ArrayList<String> messages) {
+    public DataAdapterChat(Context context, ArrayList<String> messages) {
         this.messages = messages;
         this.inflater = LayoutInflater.from(context);
     }
 
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ViewHolderChat onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = inflater.inflate(R.layout.item_message, parent, false);
-        return new ViewHolder(view);
+        return new ViewHolderChat(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolderChat holder, int position) {
 
         String msg = messages.get(position);
         holder.message.setText(msg);

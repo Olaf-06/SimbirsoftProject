@@ -165,42 +165,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-        Log.d("logmy", "onStart");
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        Log.d("logmy", "onResume");
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        Log.d("logmy", "onPause");
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        Log.d("logmy", "onStop");
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        Log.d("logmy", "onDestroy");
-    }
-
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-        Log.d("logmy", "onRestart");
-    }
-
-    @Override
     public void onBackPressed() {
         moveTaskToBack(true);
     }
