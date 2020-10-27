@@ -1,6 +1,7 @@
 package com.example.simbirsoftproject;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,7 @@ public class DataAdapterChat extends RecyclerView.Adapter<ViewHolderChat> {
     LayoutInflater inflater;
 
     public DataAdapterChat(Context context, ArrayList<String> messages) {
+        Log.d("logmy", "конструктор адаптера");
         this.messages = messages;
         this.inflater = LayoutInflater.from(context);
     }
@@ -24,13 +26,14 @@ public class DataAdapterChat extends RecyclerView.Adapter<ViewHolderChat> {
     @NonNull
     @Override
     public ViewHolderChat onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        Log.d("logmy", "OnCreateViewHolder");
         View view = inflater.inflate(R.layout.item_message, parent, false);
         return new ViewHolderChat(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolderChat holder, int position) {
-
+        Log.d("logmy", "onBindViewHolder");
         String msg = messages.get(position);
         holder.message.setText(msg);
 
@@ -38,6 +41,7 @@ public class DataAdapterChat extends RecyclerView.Adapter<ViewHolderChat> {
 
     @Override
     public int getItemCount() {
+        Log.d("logmy", "getItemCount: насчитал несколько");
         return messages.size();
     }
 }

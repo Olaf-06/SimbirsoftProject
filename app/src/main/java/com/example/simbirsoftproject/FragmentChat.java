@@ -1,6 +1,7 @@
 package com.example.simbirsoftproject;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -49,14 +50,17 @@ public class FragmentChat extends Fragment implements View.OnClickListener {
         RVMessages.setAdapter(dataAdapter);
 
         btnSendMessage.setOnClickListener(FragmentChat.this);
-
+        Log.d("logmy", "прогрузились документы");
         myRef.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
                 String msg = snapshot.getValue(String.class);
                 messages.add(msg);
+                Log.d("logmy", "прогрузились документы");
                 dataAdapter.notifyDataSetChanged();
+                Log.d("logmy", "прогрузились документы");
                 RVMessages.smoothScrollToPosition(messages.size());
+                Log.d("logmy", "прогрузились документы");
             }
 
             @Override

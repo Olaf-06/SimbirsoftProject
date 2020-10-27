@@ -138,7 +138,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
                         Bitmap bitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
                         imgInMainMenu.setImageBitmap(bitmap);
-                        onStart();
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override

@@ -1,13 +1,13 @@
 package com.example.simbirsoftproject;
 
-import android.graphics.Bitmap;
-
 public class Simulators {
     String name;
     String description;
-    Bitmap photoID;
+    String photoID;
 
-    Simulators(String name, String description, Bitmap photoID){
+    public Simulators() {}
+
+    public Simulators(String name, String description, String photoID){
         this.name = name;
         this.description = description;
         this.photoID = photoID;
@@ -21,7 +21,7 @@ public class Simulators {
         return description;
     }
 
-    public Bitmap getPhotoID() {
+    public String getPhotoID() {
         return photoID;
     }
 }
