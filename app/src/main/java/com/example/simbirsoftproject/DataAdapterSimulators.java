@@ -7,6 +7,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -26,10 +28,68 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class DataAdapterSimulators extends RecyclerView.Adapter<ViewHolderSimulators> {
+public class DataAdapterSimulators extends RecyclerView.Adapter<DataAdapterSimulators.ViewHolderSimulators> {
 
     List<Simulators> simulatorsList;
     LayoutInflater inflater;
+    FirebaseStorage storage = FirebaseStorage.getInstance();
+    StorageReference storageRef;
+
+    public class ViewHolderSimulators extends RecyclerView.ViewHolder implements View.OnClickListener {
+
+        TextView nameOfSimulator, descriptionOfSimulator;
+        ImageView imgSimulator, clearItemOfSimulatos;
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        public ViewHolderSimulators(@NonNull View itemView) {
+            super(itemView);
+            nameOfSimulator = (TextView) itemView.findViewById(R.id.nameOfSimulator);
+            descriptionOfSimulator = (TextView) itemView.findViewById(R.id.descriptionOfSimulator);
+            imgSimulator = (ImageView) itemView.findViewById(R.id.imgSimulator);
+            clearItemOfSimulatos = (ImageView) itemView.findViewById(R.id.clearItemOfSimulators);
+
+            clearItemOfSimulatos.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View view) {
+            if (view.getId() == R.id.clearItemOfSimulators) {
+                db.collection("simulators").document(simulatorsList.get(getAdapterPosition()).photoID)
+                        .delete()
+                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                StorageReference desertRef = storageRef.child("photoOfSimulator/simulator" + simulatorsList.get(getAdapterPosition()).photoID);
+                                desertRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        // File deleted successfully
+                                    }
+                                }).addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception exception) {
+                                        // Uh-oh, an error occurred!
+                                    }
+                                });
+                                removeAt(getAdapterPosition());
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Log.w("logmy", "Error deleting document", e);
+                            }
+                        });
+
+            }
+        }
+    }
+
+    public void removeAt(int position) {
+        simulatorsList.remove(position);
+        notifyItemRemoved(position);
+        notifyItemRangeChanged(position, simulatorsList.size());
+    }
 
     public DataAdapterSimulators(Context context, ArrayList<Simulators> simulatorsList){
         this.simulatorsList = simulatorsList;
@@ -50,9 +110,8 @@ public class DataAdapterSimulators extends RecyclerView.Adapter<ViewHolderSimula
         Log.d("logmy", "onBindViewHolder");
         holder.nameOfSimulator.setText(simulatorsList.get(position).name);
         holder.descriptionOfSimulator.setText(simulatorsList.get(position).description);
-        FirebaseStorage storage = FirebaseStorage.getInstance();
-        StorageReference storageRef = storage.getReferenceFromUrl("gs://simbirsoftproject.appspot.com/" +
-                "photoOfUsers").child("simulator" + simulatorsList.get(position).photoID);
+        storageRef = storage.getReferenceFromUrl("gs://simbirsoftproject.appspot.com/" +
+                "photoOfSimulator").child("simulator" + simulatorsList.get(position).photoID);
         final File localFile;
         try {
             localFile = File.createTempFile("images", "jpg");
@@ -72,18 +131,13 @@ public class DataAdapterSimulators extends RecyclerView.Adapter<ViewHolderSimula
             e.printStackTrace();
         }
         Log.d("logmy", "onBindViewHolder: ставлю на вьюшки значения");
-        try {
-            Thread.sleep(3000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
     }
 
     @Override
     public int getItemCount() {
         if(simulatorsList == null) {
             Log.d("logmy", "getItemCount: насчитал 0");
-            return 1;
+            return 0;
         }
         Log.d("logmy", "getItemCount: насчитал несколько");
         return simulatorsList.size();

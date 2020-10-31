@@ -54,11 +54,7 @@ public class FragmentSimulators extends Fragment implements View.OnClickListener
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 Simulators simulatorsClass = document.toObject(Simulators.class);
                                 simulators.add(new Simulators(simulatorsClass.name, simulatorsClass.description, simulatorsClass.photoID));
-                            }
-                            try {
-                                Thread.sleep(3000);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
+                                adapter.notifyDataSetChanged();
                             }
                             Log.d("logmy", "прогрузились документы");
                         } else {
@@ -66,15 +62,6 @@ public class FragmentSimulators extends Fragment implements View.OnClickListener
                         }
                     }
                 });
-        try {
-            Thread.sleep(3000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        adapter.notifyDataSetChanged();
-        RVSimulators.smoothScrollToPosition(simulators.size());
-
         return view;
     }
 
