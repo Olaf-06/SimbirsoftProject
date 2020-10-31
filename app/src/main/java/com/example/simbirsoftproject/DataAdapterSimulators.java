@@ -59,19 +59,19 @@ public class DataAdapterSimulators extends RecyclerView.Adapter<DataAdapterSimul
                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void aVoid) {
-                                StorageReference desertRef = storageRef.child("photoOfSimulator/simulator" + simulatorsList.get(getAdapterPosition()).photoID);
-                                desertRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                storageRef = storage.getReferenceFromUrl("gs://simbirsoftproject.appspot.com/" +
+                                        "photoOfSimulator").child("simulator" + simulatorsList.get(getAdapterPosition()).photoID);
+                                storageRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
                                     public void onSuccess(Void aVoid) {
-                                        // File deleted successfully
+                                        removeAt(getAdapterPosition());// File deleted successfully
                                     }
                                 }).addOnFailureListener(new OnFailureListener() {
                                     @Override
                                     public void onFailure(@NonNull Exception exception) {
-                                        // Uh-oh, an error occurred!
+                                        Log.d("logmy", "onFailure: фотка не удалилась");
                                     }
                                 });
-                                removeAt(getAdapterPosition());
                             }
                         })
                         .addOnFailureListener(new OnFailureListener() {
