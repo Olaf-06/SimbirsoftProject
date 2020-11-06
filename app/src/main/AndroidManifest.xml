@@ -11,7 +11,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".AddSimulator"></activity>
+        <activity android:name=".AddGroupLesson"></activity>
+        <activity android:name=".AddSimulator" />
         <activity android:name=".editProfileData" />
         <activity
             android:name=".loginActivity"
