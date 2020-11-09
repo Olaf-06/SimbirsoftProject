@@ -2,10 +2,10 @@ package com.example.simbirsoftproject;
 
 public class Users {
 
-    private String adminRights;
-    private String firstName;
-    private String lastName;
-    private String urlPhoto;
+    String adminRights;
+    String firstName;
+    String lastName;
+    String urlPhoto;
 
     public Users() {}
 

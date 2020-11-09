@@ -66,7 +66,7 @@ public class editProfileData extends AppCompatActivity implements View.OnClickLi
                     Map<String, Object> userdb = new HashMap<>();
                     userdb.put("firstName", firstName);
                     userdb.put("lastName", lastName);
-                    userdb.put("urlPhoto", "");
+                    userdb.put("urlPhoto", uid);
                     Log.d("logmy", "Cейчас будем добавлять документ в коллекцию");
                     db.collection("users").document(uid)
                             .update(userdb)
