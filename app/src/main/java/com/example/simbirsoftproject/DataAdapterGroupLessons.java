@@ -35,7 +35,7 @@ public class DataAdapterGroupLessons extends RecyclerView.Adapter<DataAdapterGro
     public class ViewHolderGroupLessons extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         TextView nameOfGroupLesson, descriptionOfGroupLesson;
-        ImageView imgGroupLesson, clearItemOfSimulatos;
+        ImageView imgGroupLesson, clearItemOfGroupLesson;
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
         public ViewHolderGroupLessons(@NonNull View itemView) {
@@ -43,9 +43,9 @@ public class DataAdapterGroupLessons extends RecyclerView.Adapter<DataAdapterGro
             nameOfGroupLesson = (TextView) itemView.findViewById(R.id.nameOfGroupLesson);
             descriptionOfGroupLesson = (TextView) itemView.findViewById(R.id.descriptionOfGroupLesson);
             imgGroupLesson = (ImageView) itemView.findViewById(R.id.imgGroupLessons);
-            clearItemOfSimulatos = (ImageView) itemView.findViewById(R.id.clearItemOfGroupLesson);
+            clearItemOfGroupLesson = (ImageView) itemView.findViewById(R.id.clearItemOfGroupLesson);
 
-            clearItemOfSimulatos.setOnClickListener(this);
+            clearItemOfGroupLesson.setOnClickListener(this);
         }
 
         @Override

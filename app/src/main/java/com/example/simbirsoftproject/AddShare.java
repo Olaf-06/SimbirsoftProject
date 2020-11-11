@@ -1,16 +1,13 @@
 package com.example.simbirsoftproject;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.health.ServiceHealthStats;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -29,17 +26,15 @@ import com.google.firebase.storage.UploadTask;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
-import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
-public class AddSimulator extends AppCompatActivity implements View.OnClickListener {
+public class AddShare extends AppCompatActivity implements View.OnClickListener {
 
     private Uri imgSrc;
-    ImageView imgSimulator;
+    ImageView imgShare;
     Button btnEdit;
-    EditText etSimulatorName, etEtSimulatorDescription;
+    EditText etShareName, etEtShareDescription;
     private StorageReference mStorageRef;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     int randId = (int) (Math.random() * 100000000);
@@ -47,14 +42,14 @@ public class AddSimulator extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_simulator);
-        imgSimulator = (ImageView) findViewById(R.id.imgProfile);
+        setContentView(R.layout.activity_add_share);
+        imgShare = (ImageView) findViewById(R.id.imgProfile);
 
         btnEdit = (Button) findViewById(R.id.btnEdit);
-        etSimulatorName = (EditText) findViewById(R.id.etSimulatorName);
-        etEtSimulatorDescription = (EditText) findViewById(R.id.etSimulatorDescription);
+        etShareName = (EditText) findViewById(R.id.etShareName);
+        etEtShareDescription = (EditText) findViewById(R.id.etShareDescription);
 
-        imgSimulator.setOnClickListener(this);
+        imgShare.setOnClickListener(this);
         btnEdit.setOnClickListener(this);
         mStorageRef = FirebaseStorage.getInstance().getReference();
         Log.d("logmy", "editProfileData создана, все view объявлены");
@@ -64,7 +59,7 @@ public class AddSimulator extends AppCompatActivity implements View.OnClickListe
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btnEdit:
-                String name = etSimulatorName.getText().toString(), description = etEtSimulatorDescription.getText().toString();
+                String name = etShareName.getText().toString(), description = etEtShareDescription.getText().toString();
                 Log.d("logmy", "Загрузили фото");
                 if (!name.isEmpty() && !description.isEmpty()) {
                     Map<String, Object> userdb = new HashMap<>();
@@ -72,19 +67,19 @@ public class AddSimulator extends AppCompatActivity implements View.OnClickListe
                     userdb.put("description", description);
                     userdb.put("photoID", "" + randId);
                     Log.d("logmy", "Cей час будем добавлять документ в коллекцию");
-                    db.collection("simulators").document("" + randId)
+                    db.collection("Shares").document("" + randId)
                             .set(userdb)
                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void aVoid) {
-                                    Intent intent = new Intent(AddSimulator.this, MainActivity.class);
+                                    Intent intent = new Intent(AddShare.this, MainActivity.class);
                                     startActivity(intent);
                                 }
                             })
                             .addOnFailureListener(new OnFailureListener() {
                                 @Override
                                 public void onFailure(@NonNull Exception e) {
-                                    Toast.makeText(AddSimulator.this, "Error adding document", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(AddShare.this, "Error adding document", Toast.LENGTH_SHORT).show();
                                 }
                             });
                 } else {
@@ -111,14 +106,14 @@ public class AddSimulator extends AppCompatActivity implements View.OnClickListe
             case 1:
                 if (resultCode == RESULT_OK) {
                     try {
-                        //Получаем URI изображения, преобразуем его в Bitmap
-                        //объект и отображаем в элементе ImageView нашего интерфейса:
+//Получаем URI изображения, преобразуем его в Bitmap
+//объект и отображаем в элементе ImageView нашего интерфейса:
                         final Uri imageUri = imageReturnedIntent.getData();
                         imgSrc = imageUri;
                         final InputStream imageStream = getContentResolver().openInputStream(imageUri);
                         final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
-                        imgSimulator.setImageBitmap(selectedImage);
-                        StorageReference riversRef = mStorageRef.child("photoOfSimulator/" + "simulator" + randId);
+                        imgShare.setImageBitmap(selectedImage);
+                        StorageReference riversRef = mStorageRef.child("photoOfShare/" + "Share" + randId);
                         riversRef.putFile(imgSrc)
                                 .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                                     @Override

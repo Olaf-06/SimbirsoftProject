@@ -31,16 +31,12 @@ import java.util.Map;
 
 public class AddGroupLesson extends AppCompatActivity implements View.OnClickListener {
 
-    public static final String APP_PREFERENCES = "mySharedPreferences";
-    public static final String APP_PREFERENCES_PHOTO_OF_GroupLessonS_COUNTER = "appPreferencesPhotoOfGroupLessonCounter";
     private Uri imgSrc;
     ImageView imgGroupLesson;
     Button btnEdit;
     EditText etGroupLessonName, etEtGroupLessonDescription;
     private StorageReference mStorageRef;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
-    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-    String uid = user.getUid();
     int randId = (int) (Math.random() * 100000000);
 
     @Override
@@ -65,7 +61,7 @@ public class AddGroupLesson extends AppCompatActivity implements View.OnClickLis
             case R.id.btnEdit:
                 String name = etGroupLessonName.getText().toString(), description = etEtGroupLessonDescription.getText().toString();
                 Log.d("logmy", "Загрузили фото");
-                if (user != null && !name.isEmpty() && !description.isEmpty()) {
+                if (!name.isEmpty() && !description.isEmpty()) {
                     Map<String, Object> userdb = new HashMap<>();
                     userdb.put("name", name);
                     userdb.put("description", description);
