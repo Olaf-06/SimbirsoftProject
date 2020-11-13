@@ -79,10 +79,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.fragmentAchievements,
                 R.id.fragmentChat,
                 R.id.fragmentGroupLessons,
-                R.id.fragmentMain,
                 R.id.fragmentShares,
                 R.id.fragmentSimulators,
                 R.id.fragmentTheory,

@@ -5,10 +5,6 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/fragmentMain"
-            android:icon="@drawable/main"
-            android:title="@string/menu_main" />
-        <item
             android:id="@+id/fragmentShares"
             android:icon="@drawable/shares"
             android:title="@string/menu_shares" />
@@ -32,10 +28,6 @@
             android:id="@+id/fragmentChat"
             android:icon="@drawable/chat"
             android:title="@string/menu_chat" />
-        <item
-            android:id="@+id/fragmentAchievements"
-            android:icon="@drawable/achievements"
-            android:title="@string/menu_achievements" />
         <item
             android:id="@+id/fragmentTheory"
             android:icon="@drawable/theory"

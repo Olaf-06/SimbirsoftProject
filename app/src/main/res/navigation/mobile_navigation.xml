@@ -3,12 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@id/fragmentMain">
-    <fragment
-        android:id="@+id/fragmentMain"
-        android:name="com.example.simbirsoftproject.FragmentMain"
-        android:label="fragment_main"
-        tools:layout="@layout/fragment_main" />
+    app:startDestination="@id/fragmentShares">
     <fragment
         android:id="@+id/fragmentShares"
         android:name="com.example.simbirsoftproject.FragmentShares"
@@ -39,11 +34,6 @@
         android:name="com.example.simbirsoftproject.FragmentChat"
         android:label="fragment_chat"
         tools:layout="@layout/fragment_chat" />
-    <fragment
-        android:id="@+id/fragmentAchievements"
-        android:name="com.example.simbirsoftproject.FragmentAchievements"
-        android:label="fragment_achievements"
-        tools:layout="@layout/fragment_achievements" />
     <fragment
         android:id="@+id/fragmentTheory"
         android:name="com.example.simbirsoftproject.FragmentTheory"
