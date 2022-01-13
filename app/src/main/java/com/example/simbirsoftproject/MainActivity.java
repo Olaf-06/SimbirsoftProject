@@ -1,5 +1,6 @@
 package com.example.simbirsoftproject;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -8,11 +9,19 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.view.Menu;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.navigation.ui.AppBarConfiguration;
+import androidx.navigation.ui.NavigationUI;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -25,16 +34,6 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.squareup.picasso.Picasso;
-
-import androidx.annotation.NonNull;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.navigation.ui.AppBarConfiguration;
-import androidx.navigation.ui.NavigationUI;
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 
 import java.io.File;
 import java.io.IOException;
@@ -51,27 +50,26 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private AppBarConfiguration mAppBarConfiguration;
     private SharedPreferences mySharedPreferences;
-    private Boolean entryBool, registration;
-    private String nickName;
     ImageView imgInMainMenu;
     FirebaseUser user;
     TextView tvHeaderEmail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        setTheme(R.style.AppTheme);
+        mySharedPreferences = getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
+        boolean entryBool = mySharedPreferences.getBoolean(APP_PREFERENCES_SETTINGS_OF_ENTRY, true);
+        String nickName = mySharedPreferences.getString(APP_PREFERENCES_NAME, "");
+        boolean registration = mySharedPreferences.getBoolean(APP_PREFERENCES_SETTINGS_OF_REGISTRATION, false);
+        if (entryBool) {
+            Intent intent = new Intent(MainActivity.this, loginActivity.class);
+            startActivity(intent);
+        }
         //Log.d("logMy","В методе OnCreate");
         super.onCreate(savedInstanceState);
         //Log.d("logMy","Скоро поставится SetContentView");
         setContentView(R.layout.activity_main);
         //Log.d("logMy","Запуск main activity");
-        mySharedPreferences = getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
-        entryBool = mySharedPreferences.getBoolean(APP_PREFERENCES_SETTINGS_OF_ENTRY, true);
-        nickName = mySharedPreferences.getString(APP_PREFERENCES_NAME, "");
-        registration = mySharedPreferences.getBoolean(APP_PREFERENCES_SETTINGS_OF_REGISTRATION, false);
-        if (entryBool) {
-            Intent intent = new Intent(MainActivity.this, loginActivity.class);
-            startActivity(intent);
-        }
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
@@ -83,7 +81,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 R.id.fragmentGroupLessons,
                 R.id.fragmentShares,
                 R.id.fragmentSimulators,
-                R.id.fragmentTheory,
                 R.id.fragmentTimetable,
                 R.id.fragmentTreners)
                 .setDrawerLayout(drawer)
@@ -142,12 +139,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     public void onFailure(@NonNull Exception exception) {
                     }
                 });
-            } catch (IOException e ) {}
+            } catch (IOException ignored) {}
             DocumentReference docRef = db.collection("users").document(user.getUid());
             docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                @SuppressLint("SetTextI18n")
                 @Override
                 public void onSuccess(DocumentSnapshot documentSnapshot) {
                     Users users = documentSnapshot.toObject(Users.class);
+                    assert users != null;
                     if(!users.getFirstName().isEmpty() && !users.getLastName().isEmpty()){
                         tvHeaderEmail.setText(users.getFirstName() + " " + users.getLastName());
                     }
@@ -173,6 +172,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 || super.onSupportNavigateUp();
     }
 
+    @SuppressLint("NonConstantResourceId")
     @Override
     public void onClick(View view) {
         switch (view.getId()) {

@@ -15,7 +15,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
@@ -24,13 +23,11 @@ import com.google.firebase.storage.StorageReference;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class DataAdapterSimulators extends RecyclerView.Adapter<DataAdapterSimulators.ViewHolderSimulators> {
 
-    List<Simulators> simulatorsList;
+    List<Data> dataList;
     LayoutInflater inflater;
     FirebaseStorage storage = FirebaseStorage.getInstance();
     StorageReference storageRef;
@@ -54,13 +51,13 @@ public class DataAdapterSimulators extends RecyclerView.Adapter<DataAdapterSimul
         @Override
         public void onClick(View view) {
             if (view.getId() == R.id.clearItemOfSimulators) {
-                db.collection("simulators").document(simulatorsList.get(getAdapterPosition()).photoID)
+                db.collection("simulators").document(dataList.get(getAdapterPosition()).photoID)
                         .delete()
                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void aVoid) {
                                 storageRef = storage.getReferenceFromUrl("gs://simbirsoftproject.appspot.com/" +
-                                        "photoOfSimulator").child("simulator" + simulatorsList.get(getAdapterPosition()).photoID);
+                                        "photoOfSimulator").child("simulator" + dataList.get(getAdapterPosition()).photoID);
                                 storageRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
                                     public void onSuccess(Void aVoid) {
@@ -86,13 +83,13 @@ public class DataAdapterSimulators extends RecyclerView.Adapter<DataAdapterSimul
     }
 
     public void removeAt(int position) {
-        simulatorsList.remove(position);
+        dataList.remove(position);
         notifyItemRemoved(position);
-        notifyItemRangeChanged(position, simulatorsList.size());
+        notifyItemRangeChanged(position, dataList.size());
     }
 
-    public DataAdapterSimulators(Context context, ArrayList<Simulators> simulatorsList){
-        this.simulatorsList = simulatorsList;
+    public DataAdapterSimulators(Context context, ArrayList<Data> dataList){
+        this.dataList = dataList;
         this.inflater = LayoutInflater.from(context);
         Log.d("logmy", "конструктор адаптера");
     }
@@ -108,10 +105,10 @@ public class DataAdapterSimulators extends RecyclerView.Adapter<DataAdapterSimul
     @Override
     public void onBindViewHolder(@NonNull final ViewHolderSimulators holder, int position) {
         Log.d("logmy", "onBindViewHolder");
-        holder.nameOfSimulator.setText(simulatorsList.get(position).name);
-        holder.descriptionOfSimulator.setText(simulatorsList.get(position).description);
+        holder.nameOfSimulator.setText(dataList.get(position).name);
+        holder.descriptionOfSimulator.setText(dataList.get(position).description);
         storageRef = storage.getReferenceFromUrl("gs://simbirsoftproject.appspot.com/" +
-                "photoOfSimulator").child("simulator" + simulatorsList.get(position).photoID);
+                "photoOfSimulator").child("simulator" + dataList.get(position).photoID);
         final File localFile;
         try {
             localFile = File.createTempFile("images", "jpg");
@@ -135,11 +132,11 @@ public class DataAdapterSimulators extends RecyclerView.Adapter<DataAdapterSimul
 
     @Override
     public int getItemCount() {
-        if(simulatorsList == null) {
+        if(dataList == null) {
             Log.d("logmy", "getItemCount: насчитал 0");
             return 0;
         }
         Log.d("logmy", "getItemCount: насчитал несколько");
-        return simulatorsList.size();
+        return dataList.size();
     }
 }

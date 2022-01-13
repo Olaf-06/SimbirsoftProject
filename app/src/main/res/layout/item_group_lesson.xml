@@ -19,7 +19,8 @@
             android:layout_marginStart="0dp"
             android:layout_marginLeft="0dp"
             android:layout_marginTop="0dp"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:background="@color/colorAccent">
 
             <ImageView
                 android:id="@+id/imgGroupLessons"
@@ -47,21 +48,30 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="left"
-                        android:text="Тренажёр"
-                        android:textSize="20dp"
                         android:layout_weight="1"
+                        android:text="Тренажёр"
+                        android:textSize="20sp"
+                        android:textColor="#000000"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@+id/imgGroupLessons"
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <ImageView
                         android:id="@+id/clearItemOfGroupLesson"
-                        android:layout_weight="10"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_weight="10"
                         app:srcCompat="@android:drawable/ic_menu_close_clear_cancel" />
 
                 </LinearLayout>
+
+                <TextView
+                    android:id="@+id/timeOfGroupLesson"
+                    android:text="Время"
+                    android:textSize="12sp"
+                    android:textColor="#000000"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
 
                 <ScrollView
                     android:layout_width="match_parent"
@@ -72,14 +82,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Описание"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toEndOf="@+id/imgGroupLessons"
-                        app:layout_constraintTop_toBottomOf="@+id/nameOfGroupLesson" />
+                        android:textColor="#000000"/>
                 </ScrollView>
             </LinearLayout>
         </LinearLayout>
-
-
     </androidx.cardview.widget.CardView>
 </RelativeLayout>

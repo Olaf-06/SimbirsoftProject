@@ -25,7 +25,7 @@ import java.util.ArrayList;
 public class FragmentShares extends Fragment implements View.OnClickListener {
 
     RecyclerView RVShares;
-    ArrayList<Shares> Shares = new ArrayList<>();
+    ArrayList<Data> Data = new ArrayList<>();
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     FloatingActionButton floatingActionButton;
 
@@ -40,7 +40,7 @@ public class FragmentShares extends Fragment implements View.OnClickListener {
         floatingActionButton.setOnClickListener(this);
 
         RVShares.setLayoutManager(new LinearLayoutManager(this.getActivity()));
-        final DataAdapterShares adapter = new DataAdapterShares(this.getActivity(), Shares);
+        final DataAdapterShares adapter = new DataAdapterShares(this.getActivity(), Data);
         RVShares.setAdapter(adapter);
 
         db.collection("Shares")
@@ -50,8 +50,8 @@ public class FragmentShares extends Fragment implements View.OnClickListener {
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot document : task.getResult()) {
-                                Shares SharesClass = document.toObject(Shares.class);
-                                Shares.add(new Shares(SharesClass.name, SharesClass.description, SharesClass.photoID));
+                                Data dataClass = document.toObject(Data.class);
+                                Data.add(new Data(dataClass.name, dataClass.description, dataClass.photoID));
                                 adapter.notifyDataSetChanged();
                             }
                             Log.d("logmy", "прогрузились документы");

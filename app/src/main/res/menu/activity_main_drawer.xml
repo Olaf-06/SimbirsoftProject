@@ -28,9 +28,5 @@
             android:id="@+id/fragmentChat"
             android:icon="@drawable/chat"
             android:title="@string/menu_chat" />
-        <item
-            android:id="@+id/fragmentTheory"
-            android:icon="@drawable/theory"
-            android:title="@string/menu_theory" />
     </group>
 </menu>

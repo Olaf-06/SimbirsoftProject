@@ -16,7 +16,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -35,13 +34,12 @@ public class DataAdapterTreners extends RecyclerView.Adapter<DataAdapterTreners.
 
     public class ViewHolderTreners extends RecyclerView.ViewHolder{
 
-        TextView nameOfTrener, descriptionOfTrener;
+        TextView nameOfTrener;
         ImageView imgTrener;
 
         public ViewHolderTreners(@NonNull View itemView) {
             super(itemView);
             nameOfTrener = (TextView) itemView.findViewById(R.id.nameOfTrener);
-            descriptionOfTrener = (TextView) itemView.findViewById(R.id.achievementsOfTrener);
             imgTrener = (ImageView) itemView.findViewById(R.id.imgTreners);
         }
     }

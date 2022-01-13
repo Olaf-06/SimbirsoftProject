@@ -1,39 +1,31 @@
 package com.example.simbirsoftproject;
 
+import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
+import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
+import android.widget.ListView;
+import android.widget.TextView;
 
-import androidx.fragment.app.Fragment;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.annotation.RequiresApi;
+import androidx.fragment.app.Fragment;
 
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
+import com.firebase.ui.database.FirebaseListAdapter;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
 
-import java.util.ArrayList;
+import java.util.Objects;
 
 public class FragmentChat extends Fragment implements View.OnClickListener {
 
-    public static final String TAG = "messages";
-    EditText edMessage;
-    Button btnSendMessage;
-
-    FirebaseDatabase database = FirebaseDatabase.getInstance();
-    DatabaseReference myRef = database.getReference("messages");
-    RecyclerView RVMessages;
-
-    ArrayList<String> messages = new ArrayList<>();
+    private FirebaseListAdapter<Message> adapter;
+    Button button;
 
     @Nullable
     @Override
@@ -41,66 +33,34 @@ public class FragmentChat extends Fragment implements View.OnClickListener {
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_chat, container, false);
-        edMessage = (EditText)view.findViewById(R.id.message_input);
-        btnSendMessage = (Button) view.findViewById(R.id.send_message_b);
-        RVMessages = (RecyclerView)view.findViewById(R.id.messages_recycler);
+        button = (Button) view.findViewById(R.id.button2);
+        button.setOnClickListener(this);
 
-        RVMessages.setLayoutManager(new LinearLayoutManager(this.getActivity()));
-        final DataAdapterChat dataAdapter = new DataAdapterChat(this.getActivity(), messages);
-        RVMessages.setAdapter(dataAdapter);
-
-        btnSendMessage.setOnClickListener(FragmentChat.this);
-        Log.d("logmy", "прогрузились документы");
-        myRef.addChildEventListener(new ChildEventListener() {
+        ListView listMessages = (ListView) view.findViewById(R.id.listView);
+        adapter = new FirebaseListAdapter<Message>(getActivity(), Message.class, R.layout.item_message, FirebaseDatabase.getInstance().getReference()) {
             @Override
-            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                String msg = snapshot.getValue(String.class);
-                messages.add(msg);
-                Log.d("logmy", "прогрузились документы");
-                dataAdapter.notifyDataSetChanged();
-                Log.d("logmy", "прогрузились документы");
-                RVMessages.smoothScrollToPosition(messages.size());
-                Log.d("logmy", "прогрузились документы");
+            protected void populateView(View v, Message model, int position) {
+                TextView textMessage, autor, timeMessage;
+                textMessage = (TextView) v.findViewById(R.id.tvMessage);
+                autor = (TextView) v.findViewById(R.id.tvUser);
+                timeMessage = (TextView) v.findViewById(R.id.tvTime);
+
+                textMessage.setText(model.getTextMessage());
+                autor.setText(model.getAutor());
+                timeMessage.setText(DateFormat.format("dd-MM-yyyy (HH:mm:ss)", model.getTimeMessage()));
             }
-
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-
-            }
-
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
+        };
+        listMessages.setAdapter(adapter);
         return view;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
-    public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.send_message_b:
-                String str = edMessage.getText().toString();
-                if (str.isEmpty()) {
-                    Toast.makeText(getActivity(), "Введите сообщение!", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                if (str.length() > 100) {
-                    Toast.makeText(getActivity(), "Текст сообщения должен быть состоять меньше, чем из 100-а символов!", Toast.LENGTH_SHORT).show();
-                }
-                myRef.push().setValue(str);
-                edMessage.setText("");
-                break;
-        }
+    public void onClick(View v) {
+        EditText input = (EditText) Objects.requireNonNull(getActivity()).findViewById(R.id.editText);
+        FirebaseDatabase.getInstance().getReference().push()
+                .setValue(new Message(input.getText().toString(),
+                        FirebaseAuth.getInstance().getCurrentUser().getEmail()));
+        input.setText("");
     }
 }

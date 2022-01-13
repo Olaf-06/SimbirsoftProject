@@ -6,7 +6,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 import androidx.annotation.NonNull;
@@ -22,12 +21,11 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class FragmentSimulators extends Fragment implements View.OnClickListener {
 
     RecyclerView RVSimulators;
-    ArrayList<Simulators> simulators = new ArrayList<>();
+    ArrayList<Data> simulators = new ArrayList<>();
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     FloatingActionButton floatingActionButton;
 
@@ -52,8 +50,8 @@ public class FragmentSimulators extends Fragment implements View.OnClickListener
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot document : task.getResult()) {
-                                Simulators simulatorsClass = document.toObject(Simulators.class);
-                                simulators.add(new Simulators(simulatorsClass.name, simulatorsClass.description, simulatorsClass.photoID));
+                                Data dataClass = document.toObject(Data.class);
+                                simulators.add(new Data(dataClass.name, dataClass.description, dataClass.photoID));
                                 adapter.notifyDataSetChanged();
                             }
                             Log.d("logmy", "прогрузились документы");

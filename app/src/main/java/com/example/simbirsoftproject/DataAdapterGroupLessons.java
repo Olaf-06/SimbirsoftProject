@@ -25,25 +25,33 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DataAdapterGroupLessons extends RecyclerView.Adapter<DataAdapterGroupLessons.ViewHolderGroupLessons> {
+public class DataAdapterGroupLessons
+        extends RecyclerView.Adapter<DataAdapterGroupLessons.ViewHolderGroupLessons> {
 
-    List<GroupLessons> GroupLessonsList;
+    List<Data> dataList;
     LayoutInflater inflater;
     FirebaseStorage storage = FirebaseStorage.getInstance();
     StorageReference storageRef;
 
-    public class ViewHolderGroupLessons extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class ViewHolderGroupLessons extends RecyclerView.ViewHolder
+            implements View.OnClickListener {
 
-        TextView nameOfGroupLesson, descriptionOfGroupLesson;
+        TextView nameOfGroupLesson, descriptionOfGroupLesson, timeOfGroupLesson;
         ImageView imgGroupLesson, clearItemOfGroupLesson;
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
         public ViewHolderGroupLessons(@NonNull View itemView) {
             super(itemView);
-            nameOfGroupLesson = (TextView) itemView.findViewById(R.id.nameOfGroupLesson);
-            descriptionOfGroupLesson = (TextView) itemView.findViewById(R.id.descriptionOfGroupLesson);
-            imgGroupLesson = (ImageView) itemView.findViewById(R.id.imgGroupLessons);
-            clearItemOfGroupLesson = (ImageView) itemView.findViewById(R.id.clearItemOfGroupLesson);
+            nameOfGroupLesson =
+                    (TextView) itemView.findViewById(R.id.nameOfGroupLesson);
+            descriptionOfGroupLesson =
+                    (TextView) itemView.findViewById(R.id.descriptionOfGroupLesson);
+            imgGroupLesson =
+                    (ImageView) itemView.findViewById(R.id.imgGroupLessons);
+            clearItemOfGroupLesson =
+                    (ImageView) itemView.findViewById(R.id.clearItemOfGroupLesson);
+            timeOfGroupLesson =
+                    (TextView) itemView.findViewById(R.id.timeOfGroupLesson);
 
             clearItemOfGroupLesson.setOnClickListener(this);
         }
@@ -51,13 +59,17 @@ public class DataAdapterGroupLessons extends RecyclerView.Adapter<DataAdapterGro
         @Override
         public void onClick(View view) {
             if (view.getId() == R.id.clearItemOfGroupLesson) {
-                db.collection("GroupLessons").document(GroupLessonsList.get(getAdapterPosition()).photoID)
+                db.collection("GroupLessons")
+                        .document(dataList.get(getAdapterPosition()).photoID)
                         .delete()
                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void aVoid) {
-                                storageRef = storage.getReferenceFromUrl("gs://simbirsoftproject.appspot.com/" +
-                                        "photoOfGroupLesson").child("GroupLesson" + GroupLessonsList.get(getAdapterPosition()).photoID);
+                                storageRef = storage.getReferenceFromUrl("gs://" +
+                                        "simbirsoftproject.appspot.com/photoOfGroupLesson")
+                                        .child("GroupLesson" + dataList
+                                                .get(getAdapterPosition()).photoID);
+
                                 storageRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
                                     public void onSuccess(Void aVoid) {
@@ -83,13 +95,14 @@ public class DataAdapterGroupLessons extends RecyclerView.Adapter<DataAdapterGro
     }
 
     public void removeAt(int position) {
-        GroupLessonsList.remove(position);
+        dataList.remove(position);
         notifyItemRemoved(position);
-        notifyItemRangeChanged(position, GroupLessonsList.size());
+        notifyItemRangeChanged(position, dataList.size());
+        notifyDataSetChanged();
     }
 
-    public DataAdapterGroupLessons(Context context, ArrayList<GroupLessons> GroupLessonsList){
-        this.GroupLessonsList = GroupLessonsList;
+    public DataAdapterGroupLessons(Context context, ArrayList<Data> dataList){
+        this.dataList = dataList;
         this.inflater = LayoutInflater.from(context);
         Log.d("logmy", "конструктор адаптера");
     }
@@ -105,10 +118,17 @@ public class DataAdapterGroupLessons extends RecyclerView.Adapter<DataAdapterGro
     @Override
     public void onBindViewHolder(@NonNull final DataAdapterGroupLessons.ViewHolderGroupLessons holder, int position) {
         Log.d("logmy", "onBindViewHolder");
-        holder.nameOfGroupLesson.setText(GroupLessonsList.get(position).name);
-        holder.descriptionOfGroupLesson.setText(GroupLessonsList.get(position).description);
+        holder.nameOfGroupLesson.setText(dataList.get(position).name);
+        holder.descriptionOfGroupLesson.setText(dataList.get(position).description);
+
+        String time = "Время: " + dataList.get(position).startTime + " - " +
+                dataList.get(position).endTime + " Дата: " + dataList.get(position).day + "." +
+                dataList.get(position).month + "." + dataList.get(position).year;
+        holder.timeOfGroupLesson.setText(time);
+
         storageRef = storage.getReferenceFromUrl("gs://simbirsoftproject.appspot.com/" +
-                "photoOfGroupLesson").child("GroupLesson" + GroupLessonsList.get(position).photoID);
+                "photoOfGroupLesson").child("GroupLesson" + dataList.get(position).photoID);
+
         final File localFile;
         try {
             localFile = File.createTempFile("images", "jpg");
@@ -132,11 +152,11 @@ public class DataAdapterGroupLessons extends RecyclerView.Adapter<DataAdapterGro
 
     @Override
     public int getItemCount() {
-        if(GroupLessonsList == null) {
+        if(dataList == null) {
             Log.d("logmy", "getItemCount: насчитал 0");
             return 0;
         }
         Log.d("logmy", "getItemCount: насчитал несколько");
-        return GroupLessonsList.size();
+        return dataList.size();
     }
 }

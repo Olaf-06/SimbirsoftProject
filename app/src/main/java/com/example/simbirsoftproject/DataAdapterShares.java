@@ -27,7 +27,7 @@ import java.util.List;
 
 public class DataAdapterShares extends RecyclerView.Adapter<DataAdapterShares.ViewHolderShares> {
 
-    List<Shares> SharesList;
+    List<Data> dataList;
     LayoutInflater inflater;
     FirebaseStorage storage = FirebaseStorage.getInstance();
     StorageReference storageRef;
@@ -51,13 +51,13 @@ public class DataAdapterShares extends RecyclerView.Adapter<DataAdapterShares.Vi
         @Override
         public void onClick(View view) {
             if (view.getId() == R.id.clearItemOfShare) {
-                db.collection("Shares").document(SharesList.get(getAdapterPosition()).photoID)
+                db.collection("Shares").document(dataList.get(getAdapterPosition()).photoID)
                         .delete()
                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void aVoid) {
                                 storageRef = storage.getReferenceFromUrl("gs://simbirsoftproject.appspot.com/" +
-                                        "photoOfShare").child("Share" + SharesList.get(getAdapterPosition()).photoID);
+                                        "photoOfShare").child("Share" + dataList.get(getAdapterPosition()).photoID);
                                 storageRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
                                     public void onSuccess(Void aVoid) {
@@ -83,13 +83,13 @@ public class DataAdapterShares extends RecyclerView.Adapter<DataAdapterShares.Vi
     }
 
     public void removeAt(int position) {
-        SharesList.remove(position);
+        dataList.remove(position);
         notifyItemRemoved(position);
-        notifyItemRangeChanged(position, SharesList.size());
+        notifyItemRangeChanged(position, dataList.size());
     }
 
-    public DataAdapterShares(Context context, ArrayList<Shares> SharesList){
-        this.SharesList = SharesList;
+    public DataAdapterShares(Context context, ArrayList<Data> dataList){
+        this.dataList = dataList;
         this.inflater = LayoutInflater.from(context);
         Log.d("logmy", "конструктор адаптера");
     }
@@ -105,10 +105,10 @@ public class DataAdapterShares extends RecyclerView.Adapter<DataAdapterShares.Vi
     @Override
     public void onBindViewHolder(@NonNull final DataAdapterShares.ViewHolderShares holder, int position) {
         Log.d("logmy", "onBindViewHolder");
-        holder.nameOfShare.setText(SharesList.get(position).name);
-        holder.descriptionOfShare.setText(SharesList.get(position).description);
+        holder.nameOfShare.setText(dataList.get(position).name);
+        holder.descriptionOfShare.setText(dataList.get(position).description);
         storageRef = storage.getReferenceFromUrl("gs://simbirsoftproject.appspot.com/" +
-                "photoOfShare").child("Share" + SharesList.get(position).photoID);
+                "photoOfShare").child("Share" + dataList.get(position).photoID);
         final File localFile;
         try {
             localFile = File.createTempFile("images", "jpg");
@@ -132,11 +132,11 @@ public class DataAdapterShares extends RecyclerView.Adapter<DataAdapterShares.Vi
 
     @Override
     public int getItemCount() {
-        if(SharesList == null) {
+        if(dataList == null) {
             Log.d("logmy", "getItemCount: насчитал 0");
             return 0;
         }
         Log.d("logmy", "getItemCount: насчитал несколько");
-        return SharesList.size();
+        return dataList.size();
     }
 }

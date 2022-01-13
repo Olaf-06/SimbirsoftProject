@@ -7,36 +7,31 @@
     <fragment
         android:id="@+id/fragmentShares"
         android:name="com.example.simbirsoftproject.FragmentShares"
-        android:label="fragment_shares"
+        android:label="Акции"
         tools:layout="@layout/fragment_shares" />
     <fragment
         android:id="@+id/fragmentTimetable"
         android:name="com.example.simbirsoftproject.FragmentTimetable"
-        android:label="fragment_timetable"
+        android:label="Расписание"
         tools:layout="@layout/fragment_timetable" />
     <fragment
         android:id="@+id/fragmentTreners"
         android:name="com.example.simbirsoftproject.FragmentTreners"
-        android:label="fragment_treners"
+        android:label="Тренеры"
         tools:layout="@layout/fragment_treners" />
     <fragment
         android:id="@+id/fragmentGroupLessons"
         android:name="com.example.simbirsoftproject.FragmentGroupLessons"
-        android:label="fragment_group_lessons"
+        android:label="Групповые занятия"
         tools:layout="@layout/fragment_group_lessons" />
     <fragment
         android:id="@+id/fragmentSimulators"
         android:name="com.example.simbirsoftproject.FragmentSimulators"
-        android:label="fragment_simulators"
+        android:label="Тренажёры"
         tools:layout="@layout/fragment_simulators" />
     <fragment
         android:id="@+id/fragmentChat"
         android:name="com.example.simbirsoftproject.FragmentChat"
-        android:label="fragment_chat"
+        android:label="Чат"
         tools:layout="@layout/fragment_chat" />
-    <fragment
-        android:id="@+id/fragmentTheory"
-        android:name="com.example.simbirsoftproject.FragmentTheory"
-        android:label="fragment_theory"
-        tools:layout="@layout/fragment_theory" />
 </navigation>

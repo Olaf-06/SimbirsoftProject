@@ -10,8 +10,13 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
-        <activity android:name=".editTimetable"></activity>
+        android:theme="@style/AppTheme.Launcher">
+        <service
+            android:name=".ServiceForChat"
+            android:enabled="true"
+            android:exported="true"></service>
+
+        <activity android:name=".editTimetable" />
         <activity android:name=".AddShare" />
         <activity android:name=".AddGroupLesson" />
         <activity android:name=".AddSimulator" />
@@ -23,7 +28,7 @@
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.Launcher">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

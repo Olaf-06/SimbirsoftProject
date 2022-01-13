@@ -3,13 +3,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:background="@color/colorAccent">
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        android:background="@drawable/linlayout">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -20,7 +22,8 @@
             android:layout_marginStart="0dp"
             android:layout_marginLeft="0dp"
             android:layout_marginTop="0dp"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:background="@color/colorAccent">
 
             <ImageView
                 android:id="@+id/imgTreners"
@@ -53,7 +56,8 @@
                         android:layout_weight="1"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@+id/imgTreners"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintTop_toTopOf="parent"
+                        android:textColor="#000000"/>
 
                 </LinearLayout>
 
@@ -61,15 +65,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
-                    <TextView
-                        android:id="@+id/achievementsOfTrener"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Описание"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toEndOf="@+id/imgTreners"
-                        app:layout_constraintTop_toBottomOf="@+id/nameOfTrener" />
                 </ScrollView>
             </LinearLayout>
         </LinearLayout>
